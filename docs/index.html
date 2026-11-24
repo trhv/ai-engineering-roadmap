@@ -159,9 +159,9 @@
               <span class="truncate">Week 01: LLM Boundary</span>
               <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             </button>
-            <button class="w-full text-left px-3 py-2 rounded-lg text-xs font-normal text-slate-400 hover:text-slate-200 hover:bg-surface-card transition-all flex items-center justify-between opacity-60 cursor-not-allowed">
+            <button onclick="switchTab('week02')" id="nav-week02" class="w-full text-left px-3 py-2 rounded-lg text-xs font-normal text-slate-400 hover:text-slate-200 hover:bg-surface-card transition-all flex items-center justify-between">
               <span class="truncate">Week 02: Structured Outputs</span>
-              <span class="text-[10px] text-slate-500">Upcoming</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
             </button>
             <button class="w-full text-left px-3 py-2 rounded-lg text-xs font-normal text-slate-400 hover:text-slate-200 hover:bg-surface-card transition-all flex items-center justify-between opacity-60 cursor-not-allowed">
               <span class="truncate">Week 03: Vector Embeddings</span>
@@ -215,7 +215,7 @@
     <main class="flex-1 custom-scrollbar overflow-y-auto px-6 py-8 lg:px-12">
       
       <!-- Week 01 Content Container -->
-      <section id="content-week01" class="space-y-10">
+      <section id="content-week01" class="tab-content space-y-10">
 
         <!-- Banner Header -->
         <div class="bg-gradient-to-br from-surface-card via-[#11192e] to-[#0d1322] border border-surface-border rounded-2xl p-6 lg:p-8 relative overflow-hidden shadow-xl">
@@ -1020,6 +1020,305 @@ const usage = await result.usage;     // only known after the stream ends</code>
         </article>
 
       </section>
+
+      <!-- Week 02 Content Container -->
+      <section id="content-week02" class="tab-content space-y-10 hidden">
+
+        <!-- Banner Header -->
+        <div class="bg-gradient-to-br from-surface-card via-[#11192e] to-[#0d1322] border border-surface-border rounded-2xl p-6 lg:p-8 relative overflow-hidden shadow-xl">
+          <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div class="flex flex-wrap items-center gap-2 mb-3">
+            <span class="px-2.5 py-0.5 rounded-md text-xs font-semibold bg-brand-500/20 text-brand-400 border border-brand-500/30">Phase 1: Foundations</span>
+            <span class="px-2.5 py-0.5 rounded-md text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Status: Completed</span>
+            <span class="px-2.5 py-0.5 rounded-md text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">Node.js v22 LTS • TypeScript • Zod • Vercel AI SDK</span>
+          </div>
+
+          <h2 class="text-2xl lg:text-3xl font-extrabold text-white tracking-tight mb-2">
+            Week 02: Structured Outputs, Validation, and Tool Calling
+          </h2>
+          <p class="text-sm text-slate-300 max-w-4xl leading-relaxed mb-6">
+            Establishing strict application-governed trust boundaries around schema-constrained generation and agentic tool dispatch. Features runtime Zod contract validation, logit grammar masking, deterministic SQL/shell injection interception, multi-step ReAct loops, and resilience against upstream rate limits.
+          </p>
+
+          <div class="flex flex-wrap gap-4 text-xs pt-4 border-t border-surface-border/60">
+            <div>
+              <span class="text-slate-500 block">Deliverable Directory</span>
+              <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-02-structured-outputs" class="font-mono text-brand-400 hover:underline">apps/week-02-structured-outputs/</a>
+            </div>
+            <div class="border-l border-surface-border/60 pl-4">
+              <span class="text-slate-500 block">Trello Card</span>
+              <a href="https://trello.com/c/t2EUpfej/22-ai-roadmap-week-02-structured-outputs-validation-and-tool-calling" target="_blank" class="text-blue-400 hover:underline flex items-center gap-1">
+                Week 02 Card ↗
+              </a>
+            </div>
+            <div class="border-l border-surface-border/60 pl-4">
+              <span class="text-slate-500 block">Evaluation Test Suite</span>
+              <span class="font-mono text-slate-300">20 Varied Scenarios (95% Valid, 100% Injection Blocked)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Architecture Diagram Card -->
+        <div class="bg-surface-card border border-surface-border rounded-xl p-6 overflow-x-auto shadow-inner">
+          <div class="text-xs font-mono text-slate-400 mb-4 flex items-center justify-between">
+            <span>ZERO-TRUST ARCHITECTURE & TOOL EXECUTION BOUNDARY</span>
+            <span class="text-emerald-400 text-[11px]">Live Rendered Mermaid</span>
+          </div>
+          <pre class="mermaid text-center">
+flowchart TD
+    Client["Client / CLI / REST API"] --> API["Express Route Handler"]
+    API --> Agent["Agent / Task Extractor Service"]
+    
+    subgraph Boundary ["Application Trust Boundary (Zero Trust)"]
+        direction TB
+        Auth["Permission & Tool Whitelist"]
+        ZodVal["Runtime Zod Schema Validation"]
+        Sanitizer["Malicious Payload Detection (SQL/Shell)"]
+        SafeExec["In-Memory Sandboxed Task Store"]
+    end
+
+    subgraph LLM ["Probabilistic Model Layer"]
+        Gemini["Google Gemini (via Vercel AI SDK)"]
+    end
+
+    Agent -->|Structured Prompt + Schema| Gemini
+    Gemini -->|Proposed JSON / Tool Calls| Auth
+    Auth -->|Whitelisted Tools Only| Sanitizer
+    Sanitizer -->|Safe Payload| ZodVal
+    ZodVal -->|Typed Data| SafeExec
+    SafeExec -->|Result| Agent
+    Agent -->|Validated Response| Client
+          </pre>
+        </div>
+
+        <!-- Concept 1: Schema-Constrained Outputs -->
+        <article class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 transition-all hover:border-brand-500/40 shadow-sm" data-category="architecture">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-surface-border/60 pb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-brand-400 font-mono tracking-wider">CONCEPT 01</span>
+              <h3 class="text-lg font-bold text-white">Schema-Constrained Structured Outputs & Grammar Masking</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">System Architecture & Reliability</span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400 bg-surface-bg/50 px-3 py-2 rounded-lg border border-surface-border/40">
+            <span>Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-02-structured-outputs/src/services/task-extractor.service.ts#L10-L58" class="text-brand-400 hover:underline font-mono">task-extractor.service.ts#L10-L58</a>, <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-02-structured-outputs/src/schemas/task.schema.ts#L11-L66" class="text-brand-400 hover:underline font-mono">task.schema.ts#L11-L66</a></span>
+          </div>
+
+          <div class="relative group">
+            <div class="flex items-center justify-between text-xs font-mono text-slate-400 bg-slate-900/80 px-4 py-2 rounded-t-lg border-b border-surface-border">
+              <span>src/services/task-extractor.service.ts</span>
+              <button onclick="copyCode(this)" class="text-slate-400 hover:text-white transition-colors">Copy</button>
+            </div>
+            <pre class="rounded-b-lg !mt-0 !bg-slate-950 p-4 overflow-x-auto text-xs"><code class="language-typescript">const result = await generateObject({
+  model: getModel(modelName),
+  schema: ExtractedTaskResponseSchema,
+  system: systemPrompt,
+  prompt: `Extract structured task information from the following input:\n\n"""\n${trimmed}\n"""`,
+  abortSignal: AbortSignal.timeout(env.REQUEST_TIMEOUT_MS),
+});</code></pre>
+          </div>
+
+          <div class="text-sm text-slate-300 leading-relaxed space-y-3">
+            <p><strong>Logit Masking vs. JSON Mode Prompting:</strong> Prompting an LLM to "return JSON only" is probabilistic and brittle—models frequently prepend conversational banter or omit closing brackets. Modern providers implement <em>constrained decoding</em>: compiling JSON schemas into finite-state machines that set logits of invalid tokens to -&infin; during sampling. Syntactic adherence is mathematically guaranteed.</p>
+            <p><strong>Limitations to Understand:</strong> Grammar masking guarantees <em>shape</em>, not <em>truth</em>. If a schema mandates an enum, the model will pick one even if the input lacks any basis for it. Overly complex schemas also increase Time-to-First-Token (TTFT) due to upfront grammar compilation.</p>
+          </div>
+
+          <!-- Interview Accordion -->
+          <div class="border border-surface-border rounded-lg overflow-hidden bg-surface-bg/40">
+            <button onclick="toggleAccordion(this)" class="w-full text-left px-4 py-3 text-xs font-semibold text-slate-200 flex items-center justify-between hover:bg-surface-card transition-colors">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-400">💡</span> Senior Interview Focus: Why does JSON schema validation not eliminate hallucinations?
+              </span>
+              <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div class="px-4 py-3 border-t border-surface-border text-xs text-slate-300 space-y-2 hidden">
+              <p><strong>Answer:</strong> Grammar-constrained decoding controls syntax at the token level, not semantic grounding. An LLM forced to emit a typed object can still invent fake dates, hallucinate nonexistent task IDs, or invent priorities. Application-layer semantic validation and retrieval grounding remain indispensable.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Concept 2: Function & Tool Calling Execution Boundary -->
+        <article class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 transition-all hover:border-brand-500/40 shadow-sm" data-category="security">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-surface-border/60 pb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-brand-400 font-mono tracking-wider">CONCEPT 02</span>
+              <h3 class="text-lg font-bold text-white">Function & Tool Calling: Propose vs. Execute Boundary</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">Security & Systems Architecture</span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400 bg-surface-bg/50 px-3 py-2 rounded-lg border border-surface-border/40">
+            <span>Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-02-structured-outputs/src/services/tool-executor.service.ts#L81-L100" class="text-brand-400 hover:underline font-mono">tool-executor.service.ts#L81-L100</a>, <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-02-structured-outputs/src/services/agent.service.ts#L45-L68" class="text-brand-400 hover:underline font-mono">agent.service.ts#L45-L68</a></span>
+          </div>
+
+          <div class="relative group">
+            <div class="flex items-center justify-between text-xs font-mono text-slate-400 bg-slate-900/80 px-4 py-2 rounded-t-lg border-b border-surface-border">
+              <span>src/services/tool-executor.service.ts</span>
+              <button onclick="copyCode(this)" class="text-slate-400 hover:text-white transition-colors">Copy</button>
+            </div>
+            <pre class="rounded-b-lg !mt-0 !bg-slate-950 p-4 overflow-x-auto text-xs"><code class="language-typescript">public static getApplicationTools() {
+  return {
+    searchTasks: tool({
+      description: 'Search existing workspace tasks by keyword query, priority, tag, or lifecycle status.',
+      parameters: SearchTasksArgsSchema,
+      execute: async (args) => {
+        return ToolExecutorService.executeSearchTasks(args);
+      },
+    }),
+    createDraftTask: tool({
+      description: 'Create a new draft task in the project workspace with validated fields...',
+      parameters: CreateDraftTaskArgsSchema,
+      execute: async (args) => {
+        return ToolExecutorService.executeCreateDraftTask(args);
+      },
+    }),
+  };
+}</code></pre>
+          </div>
+
+          <div class="text-sm text-slate-300 leading-relaxed space-y-3">
+            <p><strong>The Core Distinction:</strong> Foundation models have no network cards, databases, or execution runtimes. In tool calling, the model merely emits structured text requesting a named action with arguments. Execution happens entirely in deterministic application code.</p>
+            <p><strong>The Observation Cycle:</strong> Application code executes the tool, wraps the outcome in a tool result message, and feeds it back to the model. The model reads the execution result as context and synthesizes its final response.</p>
+          </div>
+        </article>
+
+        <!-- Concept 3: Runtime Contract Enforcement with Zod -->
+        <article class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 transition-all hover:border-brand-500/40 shadow-sm" data-category="reliability">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-surface-border/60 pb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-brand-400 font-mono tracking-wider">CONCEPT 03</span>
+              <h3 class="text-lg font-bold text-white">Runtime Contract Enforcement & Defensive Zod Schemas</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Reliability & Data Contracts</span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400 bg-surface-bg/50 px-3 py-2 rounded-lg border border-surface-border/40">
+            <span>Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-02-structured-outputs/src/schemas/task.schema.ts#L11-L47" class="text-brand-400 hover:underline font-mono">task.schema.ts#L11-L47</a>, <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-02-structured-outputs/tests/schema-validation.test.ts#L5-L77" class="text-brand-400 hover:underline font-mono">schema-validation.test.ts#L5-L77</a></span>
+          </div>
+
+          <div class="relative group">
+            <div class="flex items-center justify-between text-xs font-mono text-slate-400 bg-slate-900/80 px-4 py-2 rounded-t-lg border-b border-surface-border">
+              <span>src/schemas/task.schema.ts</span>
+              <button onclick="copyCode(this)" class="text-slate-400 hover:text-white transition-colors">Copy</button>
+            </div>
+            <pre class="rounded-b-lg !mt-0 !bg-slate-950 p-4 overflow-x-auto text-xs"><code class="language-typescript">export const TaskSchema = z.object({
+  title: z.string().min(3).max(100),
+  description: z.string().max(500).default(''),
+  priority: PriorityEnum.default('medium'),
+  dueDate: z.string().nullable().refine(
+    val => val === null || /^\d{4}-\d{2}-\d{2}/.test(val),
+    'dueDate must be a valid ISO 8601 date string or null'
+  ).default(null),
+  tags: z.array(z.string().min(1).max(30).transform(t => t.toLowerCase().trim().replace(/[^a-z0-9_-]/g, ''))).max(5).default([]),
+  estimatedHours: z.number().positive().max(100).nullable().default(null),
+});</code></pre>
+          </div>
+
+          <div class="text-sm text-slate-300 leading-relaxed space-y-3">
+            <p><strong>Defensive Boundary Enforcement:</strong> In TypeScript, compile-time types vanish at runtime. Defensive AI engineering requires strict runtime schema enforcement: bounding string lengths (<code>max(100)</code>), enforcing ISO 8601 date regexes, transforming tags to sanitized lowercase alphanumeric, and providing safe defaults.</p>
+          </div>
+        </article>
+
+        <!-- Concept 4: Tool Authorization & Injection Neutralization -->
+        <article class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 transition-all hover:border-brand-500/40 shadow-sm" data-category="security">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-surface-border/60 pb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-brand-400 font-mono tracking-wider">CONCEPT 04</span>
+              <h3 class="text-lg font-bold text-white">Tool Authorization & Zero-Trust Injection Neutralization</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">Security & Sandboxing</span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400 bg-surface-bg/50 px-3 py-2 rounded-lg border border-surface-border/40">
+            <span>Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-02-structured-outputs/src/services/tool-executor.service.ts#L8-L23" class="text-brand-400 hover:underline font-mono">tool-executor.service.ts#L8-L23</a>, <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-02-structured-outputs/tests/tool-trust-boundary.test.ts#L25-L68" class="text-brand-400 hover:underline font-mono">tool-trust-boundary.test.ts#L25-L68</a></span>
+          </div>
+
+          <div class="relative group">
+            <div class="flex items-center justify-between text-xs font-mono text-slate-400 bg-slate-900/80 px-4 py-2 rounded-t-lg border-b border-surface-border">
+              <span>src/services/tool-executor.service.ts</span>
+              <button onclick="copyCode(this)" class="text-slate-400 hover:text-white transition-colors">Copy</button>
+            </div>
+            <pre class="rounded-b-lg !mt-0 !bg-slate-950 p-4 overflow-x-auto text-xs"><code class="language-typescript">const DANGEROUS_PATTERNS = [
+  /(\bDROP\s+TABLE\b|\bDELETE\s+FROM\b|\bUNION\s+SELECT\b|;\s*--)/i,
+  /(\brm\s+-rf\b|\bcat\s+\/etc\/|\/bin\/sh|\/bin\/bash|\bcurl\s+http|\bwget\s+http)/i,
+  /(&lt;script\b|javascript:|&lt;iframe\b)/i,
+];
+
+function sanitizeStringInput(val: string, fieldName: string): void {
+  for (const pattern of DANGEROUS_PATTERNS) {
+    if (pattern.test(val)) {
+      throw new SecurityViolationError(`Security policy violation: prohibited pattern in '${fieldName}'.`);
+    }
+  }
+}</code></pre>
+          </div>
+
+          <div class="text-sm text-slate-300 leading-relaxed space-y-3">
+            <p><strong>Neutralizing Indirect Prompt Injection:</strong> When an LLM parses external untrusted content (emails, tickets, chats), attackers attempt jailbreaks like <code>'; DROP TABLE tasks; --</code>. Our application-governed trust boundary inspects proposed parameters, whitelists allowed tools, and halts execution with HTTP 403 before touching storage engines.</p>
+          </div>
+        </article>
+
+        <!-- Concept 5: Syntactic Validity vs Semantic Correctness -->
+        <article class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 transition-all hover:border-brand-500/40 shadow-sm" data-category="evals">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-surface-border/60 pb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-brand-400 font-mono tracking-wider">CONCEPT 05</span>
+              <h3 class="text-lg font-bold text-white">Syntactic Validity vs. Semantic Correctness</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">Evaluation & Guardrails</span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400 bg-surface-bg/50 px-3 py-2 rounded-lg border border-surface-border/40">
+            <span>Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-02-structured-outputs/src/services/task-extractor.service.ts#L50-L55" class="text-brand-400 hover:underline font-mono">task-extractor.service.ts#L50-L55</a>, <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-02-structured-outputs/eval/eval-report.md#L84-L92" class="text-brand-400 hover:underline font-mono">eval-report.md#L84-L92</a></span>
+          </div>
+
+          <div class="text-sm text-slate-300 leading-relaxed space-y-3">
+            <p>A string <code>{"title": "DROP TABLE users;"}</code> is 100% syntactically valid JSON and matches <code>z.string()</code>. Yet semantically, it represents a hostile prompt injection. Syntactic validation is necessary but insufficient. Semantic checks, confidence scoring, reasoning fields, and alphanumeric density thresholds ensure that meaningless or malicious extractions are intercepted.</p>
+          </div>
+        </article>
+
+        <!-- Concept 6: Multi-Step ReAct Loops -->
+        <article class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 transition-all hover:border-brand-500/40 shadow-sm" data-category="architecture">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-surface-border/60 pb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-brand-400 font-mono tracking-wider">CONCEPT 06</span>
+              <h3 class="text-lg font-bold text-white">Multi-Step ReAct Loops & Context Budgeting</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Agent Architecture</span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400 bg-surface-bg/50 px-3 py-2 rounded-lg border border-surface-border/40">
+            <span>Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-02-structured-outputs/src/services/agent.service.ts#L45-L68" class="text-brand-400 hover:underline font-mono">agent.service.ts#L45-L68</a></span>
+          </div>
+
+          <div class="text-sm text-slate-300 leading-relaxed space-y-3">
+            <p><strong>Guarding Against Runaway Loops:</strong> In complex workflows, agents execute iterative loops (Reason + Act). Without strict application boundaries, an agent encountering tool errors can loop endlessly, compounding token costs quadratically. Enforcing <code>maxSteps: 5</code> and hard request timeouts (<code>30,000ms</code>) guarantees deterministic termination.</p>
+          </div>
+        </article>
+
+        <!-- Concept 7: Production Tokenomics & Rate Limits -->
+        <article class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 transition-all hover:border-brand-500/40 shadow-sm" data-category="tokenomics">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-surface-border/60 pb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-brand-400 font-mono tracking-wider">CONCEPT 07</span>
+              <h3 class="text-lg font-bold text-white">Production Tokenomics, Rate Limits & 429 Resilience</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Tokenomics & Reliability</span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400 bg-surface-bg/50 px-3 py-2 rounded-lg border border-surface-border/40">
+            <span>Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-02-structured-outputs/eval/eval-report.md#L94-L100" class="text-brand-400 hover:underline font-mono">eval-report.md#L94-L100</a>, <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-02-structured-outputs/tests/task-extraction.test.ts#L30-L36" class="text-brand-400 hover:underline font-mono">task-extraction.test.ts#L30-L36</a></span>
+          </div>
+
+          <div class="text-sm text-slate-300 leading-relaxed space-y-3">
+            <p><strong>Real-World Rate Limit Encounter:</strong> During our 20-scenario benchmark against Google Gemini free-tier infrastructure, we hit a live <code>RESOURCE_EXHAUSTED: 20 requests per day limit</code>. Production systems must implement exponential backoff with jitter, provider fallback cascading, and circuit breakers to prevent upstream quota limits from cascading into application outages.</p>
+          </div>
+        </article>
+
+      </section>
+
     </main>
   </div>
 
@@ -1067,8 +1366,26 @@ const usage = await result.usage;     // only known after the stream ends</code>
     }
 
     function switchTab(weekId) {
-      // Prepared for multi-week navigation as future weeks are added
-      console.log('Navigating to', weekId);
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      const activeContent = document.getElementById('content-' + weekId);
+      if (activeContent) {
+        activeContent.classList.remove('hidden');
+      }
+
+      ['week01', 'week02'].forEach(id => {
+        const btn = document.getElementById('nav-' + id);
+        if (!btn) return;
+        if (id === weekId) {
+          btn.className = 'w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between bg-brand-600/15 text-brand-300 border border-brand-500/30 shadow-sm transition-all';
+        } else {
+          btn.className = 'w-full text-left px-3 py-2 rounded-lg text-xs font-normal text-slate-400 hover:text-slate-200 hover:bg-surface-card transition-all flex items-center justify-between';
+        }
+      });
+
+      if (window.mermaid) {
+        window.mermaid.run();
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   </script>
 </body>
