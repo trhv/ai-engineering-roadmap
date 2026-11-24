@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Engineering Knowledge Base | Senior Transition Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+            surface: {
+              bg: '#090d16',
+              sidebar: '#0d1322',
+              card: '#131b2e',
+              border: '#1e293b',
+              muted: '#94a3b8'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        background: '#131b2e',
+        primaryColor: '#2563eb',
+        primaryTextColor: '#f8fafc',
+        primaryBorderColor: '#3b82f6',
+        lineColor: '#60a5fa',
+        secondaryColor: '#1e293b',
+        tertiaryColor: '#0f172a'
+      }
+    });
+  </script>
+  <style>
+    pre[class*="language-"] {
+      background: #0b0f19 !important;
+      border: 1px solid #1e293b;
+      border-radius: 0.75rem;
+      margin: 0;
+    }
+    code[class*="language-"] {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #090d16;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+  </style>
+</head>
+<body class="bg-surface-bg text-slate-100 font-sans min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-[#0d1322]/90 backdrop-blur-md border-b border-surface-border px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center font-bold text-white shadow-lg shadow-brand-600/30">
+        AI
+      </div>
+      <div>
+        <h1 class="text-base font-bold tracking-tight text-white flex items-center gap-2">
+          AI Engineering Knowledge Base
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Production Portal</span>
+        </h1>
+        <p class="text-xs text-slate-400">Senior Full-Stack Developer to AI Engineer — 24-Week Transition</p>
+      </div>
+    </div>
+
+    <!-- Search & Controls -->
+    <div class="flex items-center gap-4">
+      <div class="relative w-64 md:w-80">
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Search concepts, trade-offs, code..." 
+          class="w-full bg-[#131b2e] border border-surface-border rounded-lg pl-9 pr-4 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all"
+        />
+        <svg class="w-4 h-4 text-slate-500 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </div>
+
+      <a 
+        href="https://trello.com/b/PgwTQ2uN/test" 
+        target="_blank" 
+        class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-surface-card hover:bg-[#1a243d] border border-surface-border text-slate-300 hover:text-white transition-colors"
+      >
+        <svg class="w-3.5 h-3.5 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.5 2h-15A2.5 2.5 0 002 4.5v15A2.5 2.5 0 004.5 22h15a2.5 2.5 0 002.5-2.5v-15A2.5 2.5 0 0019.5 2zm-9 14.5a1 1 0 01-1 1h-3a1 1 0 01-1-1v-10a1 1 0 011-1h3a1 1 0 011 1v10zm8-4a1 1 0 01-1 1h-3a1 1 0 01-1-1v-6a1 1 0 011-1h3a1 1 0 011 1v6z"/>
+        </svg>
+        Trello Board
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="flex-1 flex max-w-[1800px] w-full mx-auto overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-72 bg-surface-sidebar border-r border-surface-border flex flex-col shrink-0 custom-scrollbar overflow-y-auto">
+      <div class="p-4 border-b border-surface-border">
+        <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+          <span>Roadmap Progress</span>
+          <span class="font-semibold text-brand-400">Week 1 of 24</span>
+        </div>
+        <div class="w-full bg-[#1e293b] rounded-full h-2">
+          <div class="bg-gradient-to-r from-brand-500 to-indigo-500 h-2 rounded-full" style="width: 4.16%"></div>
+        </div>
+      </div>
+
+      <nav class="p-3 space-y-6">
+        <!-- Phase 1 -->
+        <div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 mb-2 flex items-center justify-between">
+            <span>Phase 1: Foundations</span>
+            <span class="text-[10px] bg-brand-500/20 text-brand-400 px-1.5 py-0.5 rounded">Active</span>
+          </div>
+          <div class="space-y-1">
+            <button onclick="switchTab('week01')" id="nav-week01" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between bg-brand-600/15 text-brand-300 border border-brand-500/30 shadow-sm transition-all">
+              <span class="truncate">Week 01: LLM Boundary</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            </button>
+            <button class="w-full text-left px-3 py-2 rounded-lg text-xs font-normal text-slate-400 hover:text-slate-200 hover:bg-surface-card transition-all flex items-center justify-between opacity-60 cursor-not-allowed">
+              <span class="truncate">Week 02: Structured Outputs</span>
+              <span class="text-[10px] text-slate-500">Upcoming</span>
+            </button>
+            <button class="w-full text-left px-3 py-2 rounded-lg text-xs font-normal text-slate-400 hover:text-slate-200 hover:bg-surface-card transition-all flex items-center justify-between opacity-60 cursor-not-allowed">
+              <span class="truncate">Week 03: Vector Embeddings</span>
+              <span class="text-[10px] text-slate-500">Upcoming</span>
+            </button>
+            <button class="w-full text-left px-3 py-2 rounded-lg text-xs font-normal text-slate-400 hover:text-slate-200 hover:bg-surface-card transition-all flex items-center justify-between opacity-60 cursor-not-allowed">
+              <span class="truncate">Week 04: Production RAG</span>
+              <span class="text-[10px] text-slate-500">Upcoming</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-3 mb-2">
+            Phase 2: Autonomous Agents
+          </div>
+          <div class="space-y-1 opacity-50 text-xs text-slate-400 px-3 py-1 space-y-1.5">
+            <div>Week 05: Agent State & Loops</div>
+            <div>Week 06: MCP Architecture</div>
+            <div>Week 07: Long-term Memory</div>
+            <div>Week 08: Multi-Agent Swarms</div>
+          </div>
+        </div>
+
+        <!-- Phase 3 -->
+        <div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-3 mb-2">
+            Phase 3: Fine-Tuning & Alignment
+          </div>
+          <div class="space-y-1 opacity-50 text-xs text-slate-400 px-3 py-1 space-y-1.5">
+            <div>Weeks 09–12: SFT, LoRA & DPO</div>
+          </div>
+        </div>
+
+        <!-- Phase 4-6 -->
+        <div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-3 mb-2">
+            Phases 4–6: Scale & Platforms
+          </div>
+          <div class="space-y-1 opacity-50 text-xs text-slate-400 px-3 py-1 space-y-1.5">
+            <div>Weeks 13–16: Optimization & vLLM</div>
+            <div>Weeks 17–20: Multimodal Systems</div>
+            <div>Weeks 21–24: Enterprise Capstone</div>
+          </div>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 custom-scrollbar overflow-y-auto px-6 py-8 lg:px-12">
+      
+      <!-- Week 01 Content Container -->
+      <section id="content-week01" class="space-y-10">
+
+        <!-- Banner Header -->
+        <div class="bg-gradient-to-br from-surface-card via-[#11192e] to-[#0d1322] border border-surface-border rounded-2xl p-6 lg:p-8 relative overflow-hidden shadow-xl">
+          <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-brand-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div class="flex flex-wrap items-center gap-2 mb-3">
+            <span class="px-2.5 py-0.5 rounded-md text-xs font-semibold bg-brand-500/20 text-brand-400 border border-brand-500/30">Phase 1: Foundations</span>
+            <span class="px-2.5 py-0.5 rounded-md text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Status: Completed</span>
+            <span class="px-2.5 py-0.5 rounded-md text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">Node.js v24 • TypeScript • Vercel AI SDK</span>
+          </div>
+
+          <h2 class="text-2xl lg:text-3xl font-extrabold text-white tracking-tight mb-2">
+            Week 01: LLM APIs and the Application Boundary
+          </h2>
+          <p class="text-sm text-slate-300 max-w-4xl leading-relaxed mb-6">
+            Establishing a deterministic, production-grade microservice boundary around non-deterministic foundation model APIs. Features runtime contract validation, structured error mapping, automated timeouts, secret hygiene, dual-model benchmarking, and real-time observability.
+          </p>
+
+          <div class="flex flex-wrap gap-4 text-xs pt-4 border-t border-surface-border/60">
+            <div>
+              <span class="text-slate-500 block">Deliverable Directory</span>
+              <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary" class="font-mono text-brand-400 hover:underline">apps/week-01-llm-boundary/</a>
+            </div>
+            <div class="border-l border-surface-border/60 pl-4">
+              <span class="text-slate-500 block">Trello Card</span>
+              <a href="https://trello.com/c/NHEm9FlN/21-ai-roadmap-week-01-llm-apis-and-the-application-boundary" target="_blank" class="text-blue-400 hover:underline flex items-center gap-1">
+                Week 01 Card ↗
+              </a>
+            </div>
+            <div class="border-l border-surface-border/60 pl-4">
+              <span class="text-slate-500 block">Evaluation Test Suite</span>
+              <span class="font-mono text-slate-300">10 Categorized Test Prompts (100% Pass)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Architecture Diagram Card -->
+        <div class="bg-surface-card border border-surface-border rounded-xl p-6 shadow-md">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-semibold text-white flex items-center gap-2">
+              <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+              System Boundary Architecture
+            </h3>
+            <span class="text-xs text-slate-400">Live Mermaid Topology</span>
+          </div>
+
+          <div class="p-4 bg-[#090d16] rounded-lg border border-surface-border overflow-x-auto flex justify-center">
+            <pre class="mermaid">
+flowchart LR
+    Client["Client / CLI / Testbench"] -->|HTTP + X-Request-Id| Server["Express Gateway"]
+    Server -->|Zod Runtime Validation| Boundary["Application Boundary Wrapper"]
+    Boundary -->|Timeout / Normalization / Logging| Provider["Google Gemini (Vercel AI SDK)"]
+    Provider -->|Tokens & Raw Response| Boundary
+    Boundary -->|Audit Log + Token Metrics| Server
+    Server -->|Sanitized JSON Response| Client
+            </pre>
+          </div>
+        </div>
+
+        <!-- Concept Quick Navigator -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+          <a href="#c1" class="p-3 bg-surface-card hover:bg-[#1a243d] border border-surface-border rounded-lg text-center transition-all group">
+            <span class="text-[10px] text-slate-400 block mb-0.5">Concept 1</span>
+            <span class="text-xs font-semibold text-slate-200 group-hover:text-brand-400">Provider Decoupling</span>
+          </a>
+          <a href="#c2" class="p-3 bg-surface-card hover:bg-[#1a243d] border border-surface-border rounded-lg text-center transition-all group">
+            <span class="text-[10px] text-slate-400 block mb-0.5">Concept 2</span>
+            <span class="text-xs font-semibold text-slate-200 group-hover:text-brand-400">Error & Timeouts</span>
+          </a>
+          <a href="#c3" class="p-3 bg-surface-card hover:bg-[#1a243d] border border-surface-border rounded-lg text-center transition-all group">
+            <span class="text-[10px] text-slate-400 block mb-0.5">Concept 3</span>
+            <span class="text-xs font-semibold text-slate-200 group-hover:text-brand-400">Secret Hygiene</span>
+          </a>
+          <a href="#c4" class="p-3 bg-surface-card hover:bg-[#1a243d] border border-surface-border rounded-lg text-center transition-all group">
+            <span class="text-[10px] text-slate-400 block mb-0.5">Concept 4</span>
+            <span class="text-xs font-semibold text-slate-200 group-hover:text-brand-400">Tokenomics & Routing</span>
+          </a>
+          <a href="#c5" class="p-3 bg-surface-card hover:bg-[#1a243d] border border-surface-border rounded-lg text-center transition-all group">
+            <span class="text-[10px] text-slate-400 block mb-0.5">Concept 5</span>
+            <span class="text-xs font-semibold text-slate-200 group-hover:text-brand-400">AI Observability</span>
+          </a>
+          <a href="#c6" class="p-3 bg-surface-card hover:bg-[#1a243d] border border-surface-border rounded-lg text-center transition-all group">
+            <span class="text-[10px] text-slate-400 block mb-0.5">Concept 6</span>
+            <span class="text-xs font-semibold text-slate-200 group-hover:text-brand-400">Empirical Evals</span>
+          </a>
+        </div>
+
+        <!-- Concept 1 -->
+        <article id="c1" class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-surface-border pb-4">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-brand-400 bg-brand-500/10 px-2.5 py-0.5 rounded border border-brand-500/20">System Architecture & Reliability</span>
+              <h3 class="text-xl font-bold text-white mt-1">1. The Application Boundary & Provider Decoupling</h3>
+            </div>
+            <div class="text-xs font-mono bg-[#0b0f19] px-3 py-1.5 rounded-md border border-surface-border text-slate-300">
+              Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/services/llm.service.ts#L22-L89" class="text-brand-400 hover:underline">llm.service.ts#L22-L89</a>
+            </div>
+          </div>
+
+          <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
+            <p>
+              In production, treating an LLM like an ordinary deterministic microservice is an architectural anti-pattern. Foundation models exhibit probabilistic outputs, non-linear latency spikes, volatile rate limits, and unannounced schema shifts.
+            </p>
+            <p>
+              The <strong>Application Boundary</strong> insulates internal software components from upstream instability. Internal controllers never interact with raw provider JSON or vendor SDK types. Instead, requests and responses are strictly constrained to invariant company-owned schemas (<code class="text-brand-300">GenerateRequest</code> / <code class="text-brand-300">GenerateResponse</code>).
+            </p>
+          </div>
+
+          <!-- Code Snippet -->
+          <div>
+            <div class="flex items-center justify-between px-3 py-1.5 bg-[#0e1424] border-t border-x border-surface-border rounded-t-lg text-xs text-slate-400 font-mono">
+              <span>src/services/llm.service.ts</span>
+              <button onclick="copyCode(this)" class="hover:text-white transition-colors">Copy</button>
+            </div>
+            <pre><code class="language-typescript">export class LlmService {
+  async generate(params: GenerateRequest, requestId: string): Promise<GenerateResponse> {
+    const chosenModel = params.model || env.DEFAULT_MODEL;
+    const modelInstance = this.googleProvider(chosenModel);
+
+    // Call upstream within strict abort boundary
+    const result = await generateText({
+      model: modelInstance,
+      prompt: params.prompt,
+      system: params.systemPrompt,
+      temperature: params.temperature ?? 0.7,
+      maxTokens: params.maxTokens ?? env.MAX_TOKENS,
+      abortSignal: abortController.signal,
+    });
+
+    // Invariant contract returned to callers
+    return {
+      requestId,
+      model: chosenModel,
+      content: result.text,
+      usage: { promptTokens, completionTokens, totalTokens },
+      latencyMs,
+      finishReason: result.finishReason ?? "stop",
+    };
+  }
+}</code></pre>
+          </div>
+
+          <!-- Interview Questions Accordion -->
+          <div class="border border-surface-border rounded-lg overflow-hidden bg-[#0d1322]">
+            <button onclick="toggleAccordion(this)" class="w-full text-left px-4 py-3 text-xs font-semibold text-slate-200 flex items-center justify-between hover:bg-surface-card transition-colors">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-400">💡</span> AI Engineer Interview Questions & Model Answers
+              </span>
+              <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="hidden p-4 text-xs text-slate-300 space-y-3 border-t border-surface-border bg-[#090d16]">
+              <div>
+                <p class="font-semibold text-white mb-1">Q: Why shouldn't frontend clients or mobile apps call LLM provider APIs directly?</p>
+                <p class="text-slate-400">A: Direct client calls expose private API keys in client bundles, prevent centralized audit and cost attribution, bypass backend prompt injection guardrails, and tightly couple mobile releases to provider API deprecations.</p>
+              </div>
+              <div class="border-t border-surface-border pt-2">
+                <p class="font-semibold text-white mb-1">Q: What is the architectural difference between an SDK wrapper and an Application Boundary?</p>
+                <p class="text-slate-400">A: An SDK wrapper merely maps network requests into objects. An Application Boundary applies policy: circuit breakers, fallback routing across providers, semantic caching, token limits, and standardized error normalization.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Failure Modes -->
+          <div class="p-3.5 rounded-lg bg-amber-500/10 border border-amber-500/25 text-xs text-amber-200 flex items-start gap-2.5">
+            <span class="text-base shrink-0">⚠️</span>
+            <div>
+              <strong class="font-semibold text-amber-300">Failure Mode If Ignored:</strong>
+              When upstream model providers adjust response fields or change token telemetry schemas, unshielded client applications experience cascading crashes. Invalid prompt payloads cause paid model inference failures.
+            </div>
+          </div>
+        </article>
+
+        <!-- Concept 2 -->
+        <article id="c2" class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-surface-border pb-4">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-rose-400 bg-rose-500/10 px-2.5 py-0.5 rounded border border-rose-500/20">Resilience & Fault Tolerance</span>
+              <h3 class="text-xl font-bold text-white mt-1">2. Upstream Error Normalization & Timeout Management</h3>
+            </div>
+            <div class="text-xs font-mono bg-[#0b0f19] px-3 py-1.5 rounded-md border border-surface-border text-slate-300">
+              Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/errors/app-error.ts#L58-L96" class="text-brand-400 hover:underline">app-error.ts#L58-L96</a>
+            </div>
+          </div>
+
+          <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
+            <p>
+              LLM providers experience tail-latency spikes and frequent quota shedding. Stalled inference queries can hold open HTTP sockets indefinitely, exhausting backend thread pools and triggering cascading server failure.
+            </p>
+            <p>
+              By combining an active <code class="text-brand-300">AbortController</code> with deterministic error normalization, raw HTTP statuses (401, 429, 503, ETIMEDOUT) are converted into structured application exceptions (<code class="text-rose-300">TimeoutError</code>, <code class="text-amber-300">RateLimitError</code>, <code class="text-blue-300">ProviderError</code>) with sanitized error details.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between px-3 py-1.5 bg-[#0e1424] border-t border-x border-surface-border rounded-t-lg text-xs text-slate-400 font-mono">
+              <span>src/errors/app-error.ts</span>
+              <button onclick="copyCode(this)" class="hover:text-white transition-colors">Copy</button>
+            </div>
+            <pre><code class="language-typescript">export function normalizeError(err: unknown): AppError {
+  if (err instanceof AppError) return err;
+  const rawMessage = err instanceof Error ? err.message : String(err);
+
+  if (rawMessage.includes("aborted") || rawMessage.includes("timeout")) {
+    return new TimeoutError("Operation timed out while communicating with model provider.");
+  }
+  if (rawMessage.includes("429") || rawMessage.toLowerCase().includes("quota")) {
+    return new RateLimitError("Model rate limit or quota exceeded. Please retry later.");
+  }
+  if (rawMessage.includes("401") || rawMessage.includes("403")) {
+    return new AuthenticationError("Invalid or missing API key for model provider.");
+  }
+  return new ProviderError("An unexpected error occurred while communicating with model provider.", {
+    sanitizedReason: rawMessage.replace(/AIza[0-9A-Za-z-_]{35}/g, "[REDACTED_API_KEY]"),
+  });
+}</code></pre>
+          </div>
+
+          <div class="border border-surface-border rounded-lg overflow-hidden bg-[#0d1322]">
+            <button onclick="toggleAccordion(this)" class="w-full text-left px-4 py-3 text-xs font-semibold text-slate-200 flex items-center justify-between hover:bg-surface-card transition-colors">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-400">💡</span> AI Engineer Interview Questions & Model Answers
+              </span>
+              <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="hidden p-4 text-xs text-slate-300 space-y-3 border-t border-surface-border bg-[#090d16]">
+              <div>
+                <p class="font-semibold text-white mb-1">Q: How should a high-throughput backend handle sudden 429 quota spikes from an LLM?</p>
+                <p class="text-slate-400">A: Employ exponential backoff with full jitter for short bursts. For systemic saturation, maintain internal client-side token bucket rate limiters to throttle traffic upstream, and seamlessly fail over to a standby model tier (e.g. Gemini 2.5 Flash fallback to Gemini 1.5 Flash or Claude Haiku).</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-lg bg-rose-500/10 border border-rose-500/25 text-xs text-rose-200 flex items-start gap-2.5">
+            <span class="text-base shrink-0">⚠️</span>
+            <div>
+              <strong class="font-semibold text-rose-300">Failure Mode If Ignored:</strong>
+              Uncapped requests stall when upstream GPU clusters lock up, draining worker process sockets and taking down other microservices on the host machine.
+            </div>
+          </div>
+        </article>
+
+        <!-- Concept 3 -->
+        <article id="c3" class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-surface-border pb-4">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">AI Security & Compliance</span>
+              <h3 class="text-xl font-bold text-white mt-1">3. Defense-in-Depth Secret Hygiene & Log Redaction</h3>
+            </div>
+            <div class="text-xs font-mono bg-[#0b0f19] px-3 py-1.5 rounded-md border border-surface-border text-slate-300">
+              Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/services/logger.service.ts#L17-L26" class="text-brand-400 hover:underline">logger.service.ts#L17-L26</a>
+            </div>
+          </div>
+
+          <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
+            <p>
+              Foundation model API keys are high-value targets. A compromised key with high tier limits can be abused for unauthorized batch inferences or fine-tuning runs costing tens of thousands of dollars in minutes.
+            </p>
+            <p>
+              Defense-in-depth requires multi-tier guarantees: strict <code class="text-emerald-300">.gitignore</code> isolation, environment validation via Zod, serialized path redaction in Pino loggers, and regex-based credential stripping in normalized error messages.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between px-3 py-1.5 bg-[#0e1424] border-t border-x border-surface-border rounded-t-lg text-xs text-slate-400 font-mono">
+              <span>src/services/logger.service.ts</span>
+              <button onclick="copyCode(this)" class="hover:text-white transition-colors">Copy</button>
+            </div>
+            <pre><code class="language-typescript">export const logger = pino({
+  redact: {
+    paths: [
+      "req.headers.authorization",
+      "req.headers['x-api-key']",
+      "GOOGLE_GENERATIVE_AI_API_KEY",
+      "apiKey",
+      "*.apiKey",
+    ],
+    censor: "[REDACTED]",
+  },
+});</code></pre>
+          </div>
+
+          <div class="p-3.5 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-200 flex items-start gap-2.5">
+            <span class="text-base shrink-0">🛡️</span>
+            <div>
+              <strong class="font-semibold text-emerald-300">Security Guarantee:</strong>
+              Even during intensive production debug tracing, raw authorization headers and Google Gemini API keys are censored before serialization to log management infrastructure.
+            </div>
+          </div>
+        </article>
+
+        <!-- Concept 4 -->
+        <article id="c4" class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-surface-border pb-4">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-2.5 py-0.5 rounded border border-purple-500/20">Economics & Model Routing</span>
+              <h3 class="text-xl font-bold text-white mt-1">4. Tokenomics, Context Budgets & Multi-Tier Routing</h3>
+            </div>
+            <div class="text-xs font-mono bg-[#0b0f19] px-3 py-1.5 rounded-md border border-surface-border text-slate-300">
+              Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/eval/model-comparison.md" class="text-brand-400 hover:underline">model-comparison.md</a>
+            </div>
+          </div>
+
+          <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
+            <p>
+              Unlike traditional API calls with fixed bandwidth costs, LLM costs scale strictly per token. Furthermore, completion tokens cost 3x–4x more than prompt tokens due to sequential autoregressive decoding on GPU memory.
+            </p>
+            <p>
+              Week 01 established a dual-tier routing architecture: standardizing on <strong>Gemini 2.5 Flash</strong> as the default sub-second engine (~400ms latency, baseline 1x cost), while reserving <strong>Gemini 2.5 Pro</strong> (5x–10x cost, ~1.5s latency) for deep reasoning and code synthesis via per-request overrides.
+            </p>
+          </div>
+
+          <!-- Benchmark Comparison Table -->
+          <div class="overflow-x-auto rounded-lg border border-surface-border">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-[#0b0f19] text-slate-400 uppercase font-mono">
+                <tr>
+                  <th class="p-3">Model</th>
+                  <th class="p-3">Median Latency (P50)</th>
+                  <th class="p-3">Cost Ratio</th>
+                  <th class="p-3">Code / Logic Quality</th>
+                  <th class="p-3">Deployment Role</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-surface-border bg-[#0d1322]">
+                <tr>
+                  <td class="p-3 font-semibold text-brand-300">Gemini 2.5 Flash</td>
+                  <td class="p-3">~420 ms</td>
+                  <td class="p-3 text-emerald-400">1x (Baseline)</td>
+                  <td class="p-3 text-slate-300">Accurate for standard tasks</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded bg-brand-500/20 text-brand-300">Default API Engine</span></td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-purple-300">Gemini 2.5 Pro</td>
+                  <td class="p-3">~1,450 ms</td>
+                  <td class="p-3 text-amber-400">~6x–8x</td>
+                  <td class="p-3 text-slate-300">Superior generic constraints & logic</td>
+                  <td class="p-3"><span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300">Reasoning Specialist</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="border border-surface-border rounded-lg overflow-hidden bg-[#0d1322]">
+            <button onclick="toggleAccordion(this)" class="w-full text-left px-4 py-3 text-xs font-semibold text-slate-200 flex items-center justify-between hover:bg-surface-card transition-colors">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-400">💡</span> AI Engineer Interview Questions & Model Answers
+              </span>
+              <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="hidden p-4 text-xs text-slate-300 space-y-3 border-t border-surface-border bg-[#090d16]">
+              <div>
+                <p class="font-semibold text-white mb-1">Q: Why are completion tokens significantly more expensive than prompt tokens?</p>
+                <p class="text-slate-400">A: Prompt tokens are computed in parallel matrix multiplications across all GPU tensor cores (the prefill phase). Completion tokens are generated autoregressively one token at a time (the decode phase), requiring repeated memory transfers from VRAM to compute cores, bottlenecking GPU memory bandwidth.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Concept 5 -->
+        <article id="c5" class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-surface-border pb-4">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 px-2.5 py-0.5 rounded border border-cyan-500/20">Observability & MLOps</span>
+              <h3 class="text-xl font-bold text-white mt-1">5. AI-Native Observability & Request Tracing</h3>
+            </div>
+            <div class="text-xs font-mono bg-[#0b0f19] px-3 py-1.5 rounded-md border border-surface-border text-slate-300">
+              Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/server.ts#L14-L35" class="text-brand-400 hover:underline">server.ts#L14-L35</a>
+            </div>
+          </div>
+
+          <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
+            <p>
+              Standard HTTP APM tools are blind to AI failure states. An HTTP 200 response can mask an unhelpful refusal, a hallucination, or output truncated prematurely due to context exhaustion.
+            </p>
+            <p>
+              AI-native telemetry binds every call to an <code class="text-cyan-300">X-Request-Id</code> (propagated or UUID v4) and records specialized metrics: token breakdown (<code class="text-slate-200">promptTokens</code>, <code class="text-slate-200">completionTokens</code>), model name, latency in milliseconds, and the <code class="text-cyan-300">finishReason</code> (<code class="text-slate-200">stop</code>, <code class="text-slate-200">length</code>, <code class="text-slate-200">content_filter</code>).
+            </p>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between px-3 py-1.5 bg-[#0e1424] border-t border-x border-surface-border rounded-t-lg text-xs text-slate-400 font-mono">
+              <span>Telemetry Payload Schema</span>
+              <button onclick="copyCode(this)" class="hover:text-white transition-colors">Copy</button>
+            </div>
+            <pre><code class="language-json">{
+  "requestId": "d0449bce-ec89-43a3-8cc7-966debb05132",
+  "model": "gemini-2.5-flash",
+  "content": "...",
+  "usage": {
+    "promptTokens": 24,
+    "completionTokens": 38,
+    "totalTokens": 62
+  },
+  "latencyMs": 482,
+  "finishReason": "stop"
+}</code></pre>
+          </div>
+        </article>
+
+        <!-- Concept 6 -->
+        <article id="c6" class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-surface-border pb-4">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded border border-amber-500/20">Evaluation & Quality Assurance</span>
+              <h3 class="text-xl font-bold text-white mt-1">6. Empirical Evaluation & Capability Benchmarking</h3>
+            </div>
+            <div class="text-xs font-mono bg-[#0b0f19] px-3 py-1.5 rounded-md border border-surface-border text-slate-300">
+              Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/eval/prompts.json" class="text-brand-400 hover:underline">prompts.json</a>
+            </div>
+          </div>
+
+          <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
+            <p>
+              In deterministic software, regression tests pass or fail with binary precision. In AI engineering, prompt revisions or model version bumps introduce subtle regression drift.
+            </p>
+            <p>
+              The Week 01 evaluation benchmark tests 10 diverse capability and failure classes: factual retrieval, logic riddles, generic TypeScript coding, strict JSON schema output, single-character inputs, repeated noisy logs, prompt injection attacks, and multilingual translation.
+            </p>
+          </div>
+
+          <div class="border border-surface-border rounded-lg overflow-hidden bg-[#0d1322]">
+            <button onclick="toggleAccordion(this)" class="w-full text-left px-4 py-3 text-xs font-semibold text-slate-200 flex items-center justify-between hover:bg-surface-card transition-colors">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-400">💡</span> AI Engineer Interview Questions & Model Answers
+              </span>
+              <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="hidden p-4 text-xs text-slate-300 space-y-3 border-t border-surface-border bg-[#090d16]">
+              <div>
+                <p class="font-semibold text-white mb-1">Q: How do you build a CI/CD evaluation gate for LLM systems to prevent regressions?</p>
+                <p class="text-slate-400">A: Curate a versioned golden dataset representing production traffic edge cases. On pull requests affecting prompts or model versions, trigger an automated test harness scoring outputs with programmatic assertions (JSON schema, regex), semantic embedding similarity, or LLM-as-a-judge, rejecting merges that degrade scores below baseline thresholds.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Search Filter
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      const q = e.target.value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.concept-card');
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (!q || text.includes(q)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    // Accordion Toggle
+    function toggleAccordion(btn) {
+      const content = btn.nextElementSibling;
+      const icon = btn.querySelector('svg');
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.classList.add('rotate-180');
+      } else {
+        content.classList.add('hidden');
+        icon.classList.remove('rotate-180');
+      }
+    }
+
+    // Copy Code Helper
+    function copyCode(btn) {
+      const pre = btn.closest('div').nextElementSibling;
+      const code = pre.querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const originalText = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.classList.add('text-emerald-400');
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.classList.remove('text-emerald-400');
+        }, 2000);
+      });
+    }
+
+    function switchTab(weekId) {
+      // Prepared for multi-week navigation as future weeks are added
+      console.log('Navigating to', weekId);
+    }
+  </script>
+</body>
+</html>
