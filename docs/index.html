@@ -301,6 +301,26 @@ flowchart LR
             <span class="text-[10px] text-slate-400 block mb-0.5">Concept 6</span>
             <span class="text-xs font-semibold text-slate-200 group-hover:text-brand-400">Empirical Evals</span>
           </a>
+          <a href="#c7" class="p-3 bg-surface-card hover:bg-[#1a243d] border border-surface-border rounded-lg text-center transition-all group">
+            <span class="text-[10px] text-slate-400 block mb-0.5">Concept 7</span>
+            <span class="text-xs font-semibold text-slate-200 group-hover:text-brand-400">Temperature</span>
+          </a>
+          <a href="#c8" class="p-3 bg-surface-card hover:bg-[#1a243d] border border-surface-border rounded-lg text-center transition-all group">
+            <span class="text-[10px] text-slate-400 block mb-0.5">Concept 8</span>
+            <span class="text-xs font-semibold text-slate-200 group-hover:text-brand-400">Message Roles</span>
+          </a>
+          <a href="#c9" class="p-3 bg-surface-card hover:bg-[#1a243d] border border-surface-border rounded-lg text-center transition-all group">
+            <span class="text-[10px] text-slate-400 block mb-0.5">Concept 9</span>
+            <span class="text-xs font-semibold text-slate-200 group-hover:text-brand-400">Context & History</span>
+          </a>
+          <a href="#c10" class="p-3 bg-surface-card hover:bg-[#1a243d] border border-surface-border rounded-lg text-center transition-all group">
+            <span class="text-[10px] text-slate-400 block mb-0.5">Concept 10</span>
+            <span class="text-xs font-semibold text-slate-200 group-hover:text-brand-400">Streaming & TTFT</span>
+          </a>
+          <a href="#c11" class="p-3 bg-surface-card hover:bg-[#1a243d] border border-surface-border rounded-lg text-center transition-all group">
+            <span class="text-[10px] text-slate-400 block mb-0.5">Concept 11</span>
+            <span class="text-xs font-semibold text-slate-200 group-hover:text-brand-400">Model vs Contract</span>
+          </a>
         </div>
 
         <!-- Concept 1 -->
@@ -321,6 +341,9 @@ flowchart LR
             </p>
             <p>
               The <strong>Application Boundary</strong> insulates internal software components from upstream instability. Internal controllers never interact with raw provider JSON or vendor SDK types. Instead, requests and responses are strictly constrained to invariant company-owned schemas (<code class="text-brand-300">GenerateRequest</code> / <code class="text-brand-300">GenerateResponse</code>).
+            </p>
+            <p>
+              <strong>Where validation actually lives:</strong> Zod input validation runs only in the Express route (<a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/server.ts#L55-L58" class="text-brand-400 hover:underline font-mono text-xs">server.ts#L55-L58</a>). <code class="text-brand-300">LlmService.generate()</code> does not validate, so the CLI (<a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/cli.ts#L40-L48" class="text-brand-400 hover:underline font-mono text-xs">cli.ts#L40-L48</a>) and the benchmark harness bypass the checks (e.g. <code class="text-slate-200">--temperature abc</code> becomes <code class="text-slate-200">NaN</code>). In production, the schema check belongs inside the service so every entry point passes the same gate.
             </p>
           </div>
 
@@ -405,7 +428,10 @@ flowchart LR
               LLM providers experience tail-latency spikes and frequent quota shedding. Stalled inference queries can hold open HTTP sockets indefinitely, exhausting backend thread pools and triggering cascading server failure.
             </p>
             <p>
-              By combining an active <code class="text-brand-300">AbortController</code> with deterministic error normalization, raw HTTP statuses (401, 429, 503, ETIMEDOUT) are converted into structured application exceptions (<code class="text-rose-300">TimeoutError</code>, <code class="text-amber-300">RateLimitError</code>, <code class="text-blue-300">ProviderError</code>) with sanitized error details.
+              By combining an active <code class="text-brand-300">AbortController</code> with deterministic error normalization, raw HTTP statuses (401, 429, 503, ETIMEDOUT) are converted into structured application exceptions (<code class="text-rose-300">TimeoutError</code>, <code class="text-amber-300">RateLimitError</code>, <code class="text-blue-300">ProviderError</code>).
+            </p>
+            <p>
+              <strong>Known gap:</strong> the catch-all <code class="text-blue-300">ProviderError</code> stores the raw upstream message in <code class="text-slate-200">details.sanitizedReason</code>, scrubbed <em>only</em> of <code class="text-slate-200">AIza…</code> key patterns (<a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/errors/app-error.ts#L93-L95" class="text-brand-400 hover:underline font-mono text-xs">app-error.ts#L93-L95</a>), and the error handler returns <code class="text-slate-200">err.details</code> to the client verbatim (<a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/server.ts#L71-L79" class="text-brand-400 hover:underline font-mono text-xs">server.ts#L71-L79</a>). Internal hostnames, upstream URLs, or echoed prompt fragments still reach the caller. Safer: log the reason server-side by <code class="text-slate-200">requestId</code>, return only <code class="text-slate-200">code</code>, <code class="text-slate-200">message</code>, <code class="text-slate-200">requestId</code>.
             </p>
           </div>
 
@@ -465,7 +491,7 @@ flowchart LR
               <h3 class="text-xl font-bold text-white mt-1">3. Defense-in-Depth Secret Hygiene & Log Redaction</h3>
             </div>
             <div class="text-xs font-mono bg-[#0b0f19] px-3 py-1.5 rounded-md border border-surface-border text-slate-300">
-              Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/services/logger.service.ts#L17-L26" class="text-brand-400 hover:underline">logger.service.ts#L17-L26</a>
+              Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/services/logger.service.ts#L17-L26" class="text-brand-400 hover:underline">logger.service.ts#L17-L26</a>, <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/config/env.ts#L1-L46" class="text-brand-400 hover:underline">env.ts#L1-L46</a>
             </div>
           </div>
 
@@ -474,8 +500,16 @@ flowchart LR
               Foundation model API keys are high-value targets. A compromised key with high tier limits can be abused for unauthorized batch inferences or fine-tuning runs costing tens of thousands of dollars in minutes.
             </p>
             <p>
-              Defense-in-depth requires multi-tier guarantees: strict <code class="text-emerald-300">.gitignore</code> isolation, environment validation via Zod, serialized path redaction in Pino loggers, and regex-based credential stripping in normalized error messages.
+              Defense-in-depth requires multiple layers: strict <code class="text-emerald-300">.gitignore</code> isolation, startup config validation, path redaction in Pino loggers, and regex-based credential stripping in normalized error messages. Each layer has limits in Week 01:
             </p>
+            <ul class="list-disc pl-5 space-y-2">
+              <li>
+                <strong>Config validation is fail-soft, not fail-fast.</strong> <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/config/env.ts#L33-L43" class="text-brand-400 hover:underline font-mono text-xs">env.ts#L33-L43</a> catches the Zod failure, prints it, and falls back to raw <code class="text-slate-200">process.env</code> values — the server boots with an empty key and only fails (401) on the first real request. Production should exit non-zero at startup.
+              </li>
+              <li>
+                <strong>Redaction only covers the exact paths listed.</strong> Top-level <code class="text-slate-200">GOOGLE_GENERATIVE_AI_API_KEY</code> and one-level <code class="text-slate-200">*.apiKey</code> are censored, but <code class="text-slate-200">log.info({ env })</code> puts the key at <code class="text-slate-200">env.GOOGLE_GENERATIVE_AI_API_KEY</code>, which matches no path, so it is logged in full. Redaction is a safety net; the real control is never logging config objects.
+              </li>
+            </ul>
           </div>
 
           <div>
@@ -500,8 +534,8 @@ flowchart LR
           <div class="p-3.5 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-200 flex items-start gap-2.5">
             <span class="text-base shrink-0">🛡️</span>
             <div>
-              <strong class="font-semibold text-emerald-300">Security Guarantee:</strong>
-              Even during intensive production debug tracing, raw authorization headers and Google Gemini API keys are censored before serialization to log management infrastructure.
+              <strong class="font-semibold text-emerald-300">What Is Actually Guaranteed:</strong>
+              <code>Authorization</code> / <code>x-api-key</code> request headers and keys stored at the listed paths are censored before serialization. Keys nested anywhere else (e.g. inside a logged config object) are <em>not</em> — add explicit paths for every known shape and never log config.
             </div>
           </div>
         </article>
@@ -648,6 +682,339 @@ flowchart LR
                 <p class="font-semibold text-white mb-1">Q: How do you build a CI/CD evaluation gate for LLM systems to prevent regressions?</p>
                 <p class="text-slate-400">A: Curate a versioned golden dataset representing production traffic edge cases. On pull requests affecting prompts or model versions, trigger an automated test harness scoring outputs with programmatic assertions (JSON schema, regex), semantic embedding similarity, or LLM-as-a-judge, rejecting merges that degrade scores below baseline thresholds.</p>
               </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Concept 7 -->
+        <article id="c7" class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-surface-border pb-4">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-sky-400 bg-sky-500/10 px-2.5 py-0.5 rounded border border-sky-500/20">Prompt Engineering & Generation Control</span>
+              <h3 class="text-xl font-bold text-white mt-1">7. Temperature & Sampling Parameters</h3>
+            </div>
+            <div class="text-xs font-mono bg-[#0b0f19] px-3 py-1.5 rounded-md border border-surface-border text-slate-300">
+              Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/services/llm.service.ts#L53" class="text-brand-400 hover:underline">llm.service.ts#L53</a>, <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/schemas/prompt.schema.ts#L19-L23" class="text-brand-400 hover:underline">prompt.schema.ts#L19-L23</a>, <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/cli.ts#L15-L20" class="text-brand-400 hover:underline">cli.ts#L15-L20</a>
+            </div>
+          </div>
+
+          <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
+            <p>
+              At each step an LLM outputs a <strong>probability distribution over every token</strong> in its vocabulary; a sampling step picks one. <strong>Temperature</strong> divides the raw scores (logits) before softmax: low values (0–0.3) make the top token dominate — focused, repeatable output for extraction, JSON and code. Our default <code class="text-sky-300">0.7</code> gives some variety for general chat. High values (1.0–2.0) flatten the distribution — more creative, more off-topic, more hallucination-prone.
+            </p>
+            <p>
+              Related knobs not exposed in Week 01: <strong>top-p</strong> (sample from the smallest token set whose probabilities sum to <em>p</em>) and <strong>top-k</strong> (sample from the <em>k</em> most likely tokens). Tune temperature <em>or</em> top-p, not both. Ranges are provider-specific (Gemini 0–2, Anthropic 0–1), so the boundary clamps them in its own schema.
+            </p>
+            <p>
+              <strong>Temperature 0 is not deterministic.</strong> GPU batching, floating-point rounding and silent model updates can still change output between identical calls — tests must not assert exact strings.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between px-3 py-1.5 bg-[#0e1424] border-t border-x border-surface-border rounded-t-lg text-xs text-slate-400 font-mono">
+              <span>src/schemas/prompt.schema.ts + src/services/llm.service.ts</span>
+              <button onclick="copyCode(this)" class="hover:text-white transition-colors">Copy</button>
+            </div>
+            <pre><code class="language-typescript">// prompt.schema.ts
+temperature: z
+  .number()
+  .min(0.0, "Temperature must be at least 0.0")
+  .max(2.0, "Temperature cannot exceed 2.0")
+  .optional(),
+
+// llm.service.ts
+temperature: params.temperature ?? 0.7,</code></pre>
+          </div>
+
+          <div class="border border-surface-border rounded-lg overflow-hidden bg-[#0d1322]">
+            <button onclick="toggleAccordion(this)" class="w-full text-left px-4 py-3 text-xs font-semibold text-slate-200 flex items-center justify-between hover:bg-surface-card transition-colors">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-400">💡</span> AI Engineer Interview Questions & Model Answers
+              </span>
+              <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="hidden p-4 text-xs text-slate-300 space-y-3 border-t border-surface-border bg-[#090d16]">
+              <div>
+                <p class="font-semibold text-white mb-1">Q: You set temperature to 0 but get different answers for the same prompt. Why?</p>
+                <p class="text-slate-400">A: GPU floating-point math isn't associative, so batching with different requests changes rounding and can flip a near-tie between two tokens; after one token differs, the rest diverges. Providers may also update weights behind the same alias. Pin model versions, use structured output, and assert semantically, not by exact match.</p>
+              </div>
+              <div class="border-t border-surface-border pt-2">
+                <p class="font-semibold text-white mb-1">Q: What temperature for a JSON extraction endpoint vs a marketing-copy generator?</p>
+                <p class="text-slate-400">A: Extraction: 0–0.2 with schema-constrained output. Marketing copy: 0.8–1.0, generate several candidates and rank them.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-lg bg-amber-500/10 border border-amber-500/25 text-xs text-amber-200 flex items-start gap-2.5">
+            <span class="text-base shrink-0">⚠️</span>
+            <div>
+              <strong class="font-semibold text-amber-300">Failure Mode If Ignored:</strong>
+              One global default (0.7) applied to JSON or code tasks produces occasional malformed output that looks like a "random" bug; high temperature on factual tasks increases hallucinations. <strong>Trade-off:</strong> lower = consistent but repetitive; higher = diverse but less reliable.
+            </div>
+          </div>
+        </article>
+
+        <!-- Concept 8 -->
+        <article id="c8" class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-surface-border pb-4">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-fuchsia-400 bg-fuchsia-500/10 px-2.5 py-0.5 rounded border border-fuchsia-500/20">Prompt Engineering & Security</span>
+              <h3 class="text-xl font-bold text-white mt-1">8. Message Roles — System vs User Prompts</h3>
+            </div>
+            <div class="text-xs font-mono bg-[#0b0f19] px-3 py-1.5 rounded-md border border-surface-border text-slate-300">
+              Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/services/llm.service.ts#L49-L52" class="text-brand-400 hover:underline">llm.service.ts#L49-L52</a>, <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/schemas/prompt.schema.ts#L9-L13" class="text-brand-400 hover:underline">prompt.schema.ts#L9-L13</a>, <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/eval/prompts.json#L39-L43" class="text-brand-400 hover:underline">prompts.json#L39-L43</a>
+            </div>
+          </div>
+
+          <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
+            <p>
+              Chat models are trained on conversations split into <strong>roles</strong>: <strong>system</strong> (operator's standing rules — persona, format, limits; OpenAI also has a <em>developer</em> variant), <strong>user</strong> (untrusted end-user input) and <strong>assistant</strong> (the model's earlier replies, resent as history). The AI SDK maps <code class="text-fuchsia-300">system</code> to each provider's native field (Gemini <code class="text-slate-200">systemInstruction</code>), keeping the boundary provider-neutral.
+            </p>
+            <p>
+              <strong>Roles are a priority hint, not a security boundary.</strong> Everything becomes tokens in one context window, so a forceful user message ("Ignore all previous instructions…", test <code class="text-slate-200">p08</code>) can still override the system prompt — that's <strong>prompt injection</strong>. Layered defense: never put secrets in context, limit inputs, constrain outputs with schemas, and check outputs before any side effect.
+            </p>
+            <p>
+              <strong>Week 01 note:</strong> the HTTP API lets the <em>caller</em> set <code class="text-slate-200">systemPrompt</code>. Fine for an internal service; in a public product the server must own the system prompt, or users get operator-level control.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between px-3 py-1.5 bg-[#0e1424] border-t border-x border-surface-border rounded-t-lg text-xs text-slate-400 font-mono">
+              <span>src/services/llm.service.ts</span>
+              <button onclick="copyCode(this)" class="hover:text-white transition-colors">Copy</button>
+            </div>
+            <pre><code class="language-typescript">const result = await generateText({
+  model: modelInstance,
+  prompt: params.prompt,        // user role
+  system: params.systemPrompt,  // system role -> Gemini "systemInstruction"
+  ...
+});</code></pre>
+          </div>
+
+          <div class="border border-surface-border rounded-lg overflow-hidden bg-[#0d1322]">
+            <button onclick="toggleAccordion(this)" class="w-full text-left px-4 py-3 text-xs font-semibold text-slate-200 flex items-center justify-between hover:bg-surface-card transition-colors">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-400">💡</span> AI Engineer Interview Questions & Model Answers
+              </span>
+              <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="hidden p-4 text-xs text-slate-300 space-y-3 border-t border-surface-border bg-[#090d16]">
+              <div>
+                <p class="font-semibold text-white mb-1">Q: Why not concatenate system instructions and user text into one prompt string?</p>
+                <p class="text-slate-400">A: Models are trained to weight the system role more heavily as the operator's voice. Merging removes that signal and makes it easier for user text to impersonate instructions. Separate roles are also easier to version and cache.</p>
+              </div>
+              <div class="border-t border-surface-border pt-2">
+                <p class="font-semibold text-white mb-1">Q: Can a system prompt prevent prompt injection?</p>
+                <p class="text-slate-400">A: No, it only reduces it. Assume the model can be manipulated: keep secrets out of context, give it least-privilege tools, and validate its output before any side effect.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-lg bg-rose-500/10 border border-rose-500/25 text-xs text-rose-200 flex items-start gap-2.5">
+            <span class="text-base shrink-0">⚠️</span>
+            <div>
+              <strong class="font-semibold text-rose-300">Failure Mode If Ignored:</strong>
+              Instructions mixed into user text are easily overridden; secrets in the system prompt get extracted; client-controlled system prompts disable your guardrails. <strong>Trade-off:</strong> long system prompts cost tokens on every request (mitigated by prompt caching).
+            </div>
+          </div>
+        </article>
+
+        <!-- Concept 9 -->
+        <article id="c9" class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-surface-border pb-4">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-teal-400 bg-teal-500/10 px-2.5 py-0.5 rounded border border-teal-500/20">Context Management & Tokenomics</span>
+              <h3 class="text-xl font-bold text-white mt-1">9. Context Windows & Stateless Conversation History</h3>
+            </div>
+            <div class="text-xs font-mono bg-[#0b0f19] px-3 py-1.5 rounded-md border border-surface-border text-slate-300">
+              Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/services/llm.service.ts#L49-L56" class="text-brand-400 hover:underline">llm.service.ts#L49-L56</a>, <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/schemas/prompt.schema.ts#L4-L29" class="text-brand-400 hover:underline">prompt.schema.ts#L4-L29</a>, <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/eval/prompts.json#L32-L38" class="text-brand-400 hover:underline">prompts.json#L32-L38</a>
+            </div>
+          </div>
+
+          <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
+            <p>
+              The <strong>context window</strong> is the max tokens a model sees in one call: system prompt + all messages + generated output, combined. Gemini 2.5 Flash/Pro accept ~1M input tokens with up to ~65K output; many models are 128K–200K. Overflow is a hard error or silent truncation, depending on provider.
+            </p>
+            <p>
+              <strong>LLM APIs are stateless.</strong> A "conversation" is the client resending the full history every turn. So turn <em>n</em> re-pays for all earlier turns (total cost grows roughly quadratically), history needs managing (sliding window, summarizing old turns, retrieving relevant past messages), and quality drops when key facts are buried mid-context ("lost in the middle").
+            </p>
+            <p>
+              Week 01 is deliberately <strong>single-turn</strong>: one <code class="text-teal-300">prompt</code>, no history. Its caps are in <em>characters</em> (8000 / 4000) — a cheap proxy; the real limit is tokens, which vary by language (Hebrew, test <code class="text-slate-200">p10</code>, uses more tokens per character than English).
+            </p>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between px-3 py-1.5 bg-[#0e1424] border-t border-x border-surface-border rounded-t-lg text-xs text-slate-400 font-mono">
+              <span>src/schemas/prompt.schema.ts</span>
+              <button onclick="copyCode(this)" class="hover:text-white transition-colors">Copy</button>
+            </div>
+            <pre><code class="language-typescript">prompt: z.string().trim().min(1).max(8000, "Prompt cannot exceed 8000 characters"),
+systemPrompt: z.string().trim().max(4000).optional(),
+maxTokens: z.number().int().positive().max(8192).optional(),</code></pre>
+          </div>
+
+          <div class="border border-surface-border rounded-lg overflow-hidden bg-[#0d1322]">
+            <button onclick="toggleAccordion(this)" class="w-full text-left px-4 py-3 text-xs font-semibold text-slate-200 flex items-center justify-between hover:bg-surface-card transition-colors">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-400">💡</span> AI Engineer Interview Questions & Model Answers
+              </span>
+              <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="hidden p-4 text-xs text-slate-300 space-y-3 border-t border-surface-border bg-[#090d16]">
+              <div>
+                <p class="font-semibold text-white mb-1">Q: A chatbot gets slower and pricier the longer a user talks to it. Why, and what do you do?</p>
+                <p class="text-slate-400">A: Each turn resends the whole history, so input tokens (cost and prefill latency) grow every turn. Cap history with a sliding window, summarize older turns, cache the stable prefix, and store long-term facts separately (memory/RAG).</p>
+              </div>
+              <div class="border-t border-surface-border pt-2">
+                <p class="font-semibold text-white mb-1">Q: Why limit prompt size if the model supports 1M tokens?</p>
+                <p class="text-slate-400">A: Cost and latency scale with input tokens, one abusive request can burn budget, and quality degrades with very long contexts. The boundary sets a budget that fits the product, not the model maximum.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-lg bg-amber-500/10 border border-amber-500/25 text-xs text-amber-200 flex items-start gap-2.5">
+            <span class="text-base shrink-0">⚠️</span>
+            <div>
+              <strong class="font-semibold text-amber-300">Failure Mode If Ignored:</strong>
+              Unbounded history causes runaway costs and eventually context-overflow errors mid-conversation; long contexts bury key instructions. <strong>Trade-off:</strong> character caps are simple but imprecise; token counting is accurate but needs a per-provider tokenizer.
+            </div>
+          </div>
+        </article>
+
+        <!-- Concept 10 -->
+        <article id="c10" class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-surface-border pb-4">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-orange-400 bg-orange-500/10 px-2.5 py-0.5 rounded border border-orange-500/20">Latency & User Experience</span>
+              <h3 class="text-xl font-bold text-white mt-1">10. Streaming Responses & Time-to-First-Token</h3>
+            </div>
+            <div class="text-xs font-mono bg-[#0b0f19] px-3 py-1.5 rounded-md border border-surface-border text-slate-300">
+              Not implemented — blocking call at <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/services/llm.service.ts#L49-L56" class="text-brand-400 hover:underline">llm.service.ts#L49-L56</a>
+            </div>
+          </div>
+
+          <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
+            <p>
+              LLMs generate one token at a time (decode phase, Concept 4). Week 01 uses blocking <code class="text-orange-300">generateText</code>: the client waits for <em>all</em> tokens, and <code class="text-slate-200">latencyMs</code> is total time only. <strong>Streaming</strong> sends each chunk as it's generated (Server-Sent Events / chunked HTTP), so users start reading almost immediately.
+            </p>
+            <p>
+              Two numbers matter: <strong>Time-to-First-Token (TTFT)</strong> — dominated by queueing and prefill, it's what <em>feels</em> fast or slow — and <strong>total latency / tokens-per-second</strong>, which matters for back-end pipelines.
+            </p>
+            <p>
+              Streaming changes the boundary's job: errors after the <code class="text-slate-200">200</code> must be sent in-stream (in AI SDK v4 <code class="text-slate-200">streamText</code> doesn't throw — errors go to <code class="text-slate-200">onError</code>); usage and <code class="text-slate-200">finishReason</code> only arrive at the end; client disconnects must abort upstream or you pay for unread tokens; and JSON can't be schema-validated until complete.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between px-3 py-1.5 bg-[#0e1424] border-t border-x border-surface-border rounded-t-lg text-xs text-slate-400 font-mono">
+              <span>Reference sketch — NOT in repo (AI SDK v4)</span>
+              <button onclick="copyCode(this)" class="hover:text-white transition-colors">Copy</button>
+            </div>
+            <pre><code class="language-typescript">import { streamText } from "ai";
+
+const result = streamText({
+  model: modelInstance,
+  prompt: params.prompt,
+  system: params.systemPrompt,
+  abortSignal: abortController.signal,
+  onError: ({ error }) => log.error({ err: normalizeError(error) }, "stream failed"),
+});
+
+result.pipeDataStreamToResponse(res); // send chunks to Express as they arrive
+const usage = await result.usage;     // only known after the stream ends</code></pre>
+          </div>
+
+          <div class="border border-surface-border rounded-lg overflow-hidden bg-[#0d1322]">
+            <button onclick="toggleAccordion(this)" class="w-full text-left px-4 py-3 text-xs font-semibold text-slate-200 flex items-center justify-between hover:bg-surface-card transition-colors">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-400">💡</span> AI Engineer Interview Questions & Model Answers
+              </span>
+              <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="hidden p-4 text-xs text-slate-300 space-y-3 border-t border-surface-border bg-[#090d16]">
+              <div>
+                <p class="font-semibold text-white mb-1">Q: Your chat feature averages 6s latency and the model can't get faster. What do you do?</p>
+                <p class="text-slate-400">A: Stream the response so TTFT drops well under a second, show a typing indicator, and route simple requests to a faster tier. For chat, perceived latency matters more than total latency.</p>
+              </div>
+              <div class="border-t border-surface-border pt-2">
+                <p class="font-semibold text-white mb-1">Q: How do you handle an upstream error halfway through a streamed response?</p>
+                <p class="text-slate-400">A: The 200 is already sent, so emit a structured error event in the stream, log it with the request ID, and let the client show the partial output with a retry option. Abort upstream and still record usage.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-lg bg-amber-500/10 border border-amber-500/25 text-xs text-amber-200 flex items-start gap-2.5">
+            <span class="text-base shrink-0">⚠️</span>
+            <div>
+              <strong class="font-semibold text-amber-300">Failure Mode If Ignored:</strong>
+              Chat UIs feel frozen on long answers; users refresh and resend, doubling cost. <strong>Trade-off:</strong> streaming adds complexity (in-stream errors, late usage, disconnects, harder validation); blocking calls are fine for back-end jobs and short JSON.
+            </div>
+          </div>
+        </article>
+
+        <!-- Concept 11 -->
+        <article id="c11" class="concept-card bg-surface-card border border-surface-border rounded-xl p-6 lg:p-7 space-y-5 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-surface-border pb-4">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-2.5 py-0.5 rounded border border-indigo-500/20">Reliability & System Design</span>
+              <h3 class="text-xl font-bold text-white mt-1">11. What an LLM Guarantees vs the Application Contract</h3>
+            </div>
+            <div class="text-xs font-mono bg-[#0b0f19] px-3 py-1.5 rounded-md border border-surface-border text-slate-300">
+              Where: <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/schemas/prompt.schema.ts#L34-L47" class="text-brand-400 hover:underline">prompt.schema.ts#L34-L47</a>, <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/src/services/llm.service.ts#L65-L76" class="text-brand-400 hover:underline">llm.service.ts#L65-L76</a>, <a href="file:///home/arye/Documents/private/repos/ai-engineering-roadmap/apps/week-01-llm-boundary/eval/prompts.json#L22-L26" class="text-brand-400 hover:underline">prompts.json#L22-L26</a>
+            </div>
+          </div>
+
+          <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
+            <p>
+              A model API guarantees very little about <strong>content</strong>: not correctness (hallucination), not format ("return ONLY JSON", test <code class="text-slate-200">p05</code>, sometimes yields code fences or a preamble), not determinism (Concept 7), not completeness (<code class="text-slate-200">finishReason: "length"</code> or safety blocks), not instruction-following (Concept 8). It reliably gives you some text, usage counts when reported, and a finish reason.
+            </p>
+            <p>
+              The <strong>application contract</strong> is what your service promises callers — and it must only promise what your code enforces. Week 01 guarantees the <em>envelope</em> (<code class="text-indigo-300">requestId</code>, <code class="text-indigo-300">model</code>, <code class="text-indigo-300">usage</code>, <code class="text-indigo-300">latencyMs</code>, <code class="text-indigo-300">finishReason</code>) and nothing about <code class="text-slate-200">content</code> beyond "a string". Stronger guarantees need structured output + validation (Week 02), grounding via retrieval (Weeks 03–04) and evals.
+            </p>
+            <p>
+              <strong>Week 01 gap:</strong> <code class="text-slate-200">generateResponseSchema</code> is only used as a TypeScript type — nothing calls <code class="text-slate-200">.parse()</code> on the response. Also <code class="text-slate-200">requestId</code> is declared <code class="text-slate-200">.uuid()</code> while the server accepts any client <code class="text-slate-200">X-Request-Id</code>, so a runtime check would currently reject valid requests.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between px-3 py-1.5 bg-[#0e1424] border-t border-x border-surface-border rounded-t-lg text-xs text-slate-400 font-mono">
+              <span>src/services/llm.service.ts</span>
+              <button onclick="copyCode(this)" class="hover:text-white transition-colors">Copy</button>
+            </div>
+            <pre><code class="language-typescript">const response: GenerateResponse = {
+  requestId,                  // guaranteed by our code
+  model: chosenModel,         // guaranteed by our code
+  content: result.text,       // NOT guaranteed: whatever the model produced
+  usage: { promptTokens, completionTokens, totalTokens },
+  latencyMs,
+  finishReason: result.finishReason ?? "stop",
+};</code></pre>
+          </div>
+
+          <div class="border border-surface-border rounded-lg overflow-hidden bg-[#0d1322]">
+            <button onclick="toggleAccordion(this)" class="w-full text-left px-4 py-3 text-xs font-semibold text-slate-200 flex items-center justify-between hover:bg-surface-card transition-colors">
+              <span class="flex items-center gap-2">
+                <span class="text-emerald-400">💡</span> AI Engineer Interview Questions & Model Answers
+              </span>
+              <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="hidden p-4 text-xs text-slate-300 space-y-3 border-t border-surface-border bg-[#090d16]">
+              <div>
+                <p class="font-semibold text-white mb-1">Q: What's the difference between a model response and an application contract?</p>
+                <p class="text-slate-400">A: The model response is untrusted, probabilistic text plus metadata. The contract is the typed, validated shape your service promises. The boundary turns the first into the second and marks which fields are guaranteed vs best-effort.</p>
+              </div>
+              <div class="border-t border-surface-border pt-2">
+                <p class="font-semibold text-white mb-1">Q: A downstream service fails to parse your LLM endpoint's JSON 1% of the time. Whose fault, and the fix?</p>
+                <p class="text-slate-400">A: The boundary's — it passed unvalidated model text through as data. Use structured output / JSON mode, validate with a schema, retry or repair on failure, check <code>finishReason</code> for truncation, and return a typed error instead of bad data.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-lg bg-rose-500/10 border border-rose-500/25 text-xs text-rose-200 flex items-start gap-2.5">
+            <span class="text-base shrink-0">⚠️</span>
+            <div>
+              <strong class="font-semibold text-rose-300">Failure Mode If Ignored:</strong>
+              Downstream code trusts model text as data: intermittent parse errors, truncated answers shown as complete, hallucinated facts treated as truth. <strong>Trade-off:</strong> runtime validation and retries add latency and cost, but turn silent corruption into explicit errors.
             </div>
           </div>
         </article>

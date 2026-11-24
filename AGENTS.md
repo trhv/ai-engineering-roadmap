@@ -118,3 +118,43 @@ Whenever creating an implementation plan (e.g. `PLAN.md` or a structured plan fo
   - Update `docs/index.html` with the new week section, live-rendered Mermaid diagrams, code snippets, copy buttons, search index, and collapsible interview prep accordions.
 - [ ] **Trello Card Finalization:** Move the ticket's Trello card to the `Done` list and mark as complete.
 ```
+
+---
+
+## 7. Git Workflow & Branching Strategy
+
+To maintain repository integrity and clean history, follow this strict Git workflow for all roadmap tickets:
+
+### A. Golden Rule
+- **Direct pushes to `main` are strictly prohibited.**
+- All changes must be merged into `main` exclusively via **Pull Requests (PRs)**.
+
+### B. Starting a New Ticket (Mandatory Sequence)
+Whenever beginning work on a new ticket:
+1. Switch to `main`:
+   ```bash
+   git checkout main
+   ```
+2. Pull the latest upstream commits:
+   ```bash
+   git pull origin main
+   ```
+3. Create and check out a dedicated feature branch from updated `main`:
+   ```bash
+   git checkout -b feat/week-XX-<short-slug>
+   # Example: git checkout -b feat/week-02-structured-outputs
+   ```
+
+### C. Branch Naming Convention
+- Features / Weekly tickets: `feat/week-XX-<short-slug>`
+- Bugfixes / Improvements: `fix/<short-slug>`
+- Documentation updates: `docs/<short-slug>`
+
+### D. Completing the Ticket
+1. Commit all ticket deliverables, tests, and knowledge base updates to the feature branch.
+2. Push the feature branch to remote:
+   ```bash
+   git push -u origin feat/week-XX-<short-slug>
+   ```
+3. Open a Pull Request targeting `main`.
+4. Review and merge the PR into `main`.
